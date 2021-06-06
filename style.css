@@ -44,7 +44,7 @@ body {
     background: url(assets/wall-left.png);
     height: 100vh;
     background-size: contain;
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     top: 0;
     z-index: 100;
     left: 50%;
@@ -57,7 +57,7 @@ body {
     background: url(./assets/wall-right.png);
     height: 100vh;
     background-size: contain;
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     top: 0;
     z-index: 100;
     right: 50%;
