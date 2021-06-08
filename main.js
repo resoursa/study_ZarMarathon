@@ -1,5 +1,7 @@
 const arena = document.querySelector('.arenas');
+const controls = document.querySelector('.control');
 const randomButton = document.querySelector('.button');
+
 
 
 // Object Player 1
@@ -16,7 +18,10 @@ const player1 = {
     ],
     attack: function() {
         console.log(this.name + 'fight');
-    }
+    },
+    changeHealth: changeHp,
+    elHp: elHp,
+    renderHP: renderHP,
 }
 
 // Object Player 2
@@ -33,7 +38,10 @@ const player2 = {
     ],
     attack: function() {
         console.log(this.name + 'fight');
-    }
+    },
+    changeHealth: changeHp,
+    elHp: elHp,
+    renderHP: renderHP,
 }
 
 
@@ -47,9 +55,8 @@ function createDomEl(tag, className) {
 }
 
 // Math 1 - 20 random
-
-function mathRandom() {
-    let result = Math.ceil(Math.random() * 20);
+function mathRandom(multiplier) {
+    let result = Math.ceil(Math.random() * multiplier);
 
     return result;
 }
@@ -84,37 +91,83 @@ function createPlayer(playerObj) {
     return player;
 }
 
-// Change HP function
-function changeHP(playerObj) {
-    const playerLife = document.querySelector('.player' + playerObj.id + ' .life');
-    playerObj.hp -= mathRandom();
-    console.log(playerLife);
-    playerLife.style.width = playerObj.hp >= 0 ? playerObj.hp + '%' : 0;;
+// Change HP Only substract and check
+function changeHp(subtrahend) {
 
-    // Here might be better :(
-    if (player1.hp <= 0) {
-        arena.appendChild(playerWin(player2.name));
-        randomButton.disabled = true;
-    }
-    if (player2.hp <= 0) {
-        arena.appendChild(playerWin(player1.name));
-        randomButton.disabled = true;
+    this.hp -= subtrahend;
+
+    // Check if player life less than 0
+    if (this.hp <= 0) {
+        this.hp = 0
     }
 }
 
-// Player Lose Alert
-function playerWin(name) {
-    const loseTitle = createDomEl('div', 'loseTitle');
-    loseTitle.innerText = name + ' wins';
+// Return player specific selector with ID of object
+function elHp() {
+    const elIdSelector = document.querySelector('.player' + this.id + ' .life');
+    return elIdSelector;
+}
 
-    return loseTitle;
+// Call selector function with elHp and change with of life div
+function renderHP() {
+    this.elHp().style.width = this.hp + '%';
+}
+
+// Player Lose Alert
+function resultText(name) {
+    const resultOutput = createDomEl('div', 'loseTitle');
+    if(name) {
+        resultOutput.innerText = name + ' wins';
+    } else {
+        resultOutput.innerText = 'Draw';
+    }
+
+    return resultOutput;
+}
+
+function createReloadButton() {
+    const wrapper = createDomEl('div', 'reloadWrap');
+    const reloadBtn = createDomEl('button', 'button');
+    reloadBtn.classList.add('reloadBtn');
+
+    reloadBtn.innerText = 'Restart';
+
+    controls.appendChild(wrapper);
+    wrapper.appendChild(reloadBtn);
+
+    const reloadButton = document.querySelector('.reloadBtn');
+
+    reloadButton.addEventListener('click', function() {
+        window.location.reload();
+    })
 }
 
 
 randomButton.addEventListener('click', function() {
-    changeHP(player1);
-    changeHP(player2);
+    player1.changeHealth(mathRandom(70));
+    player1.renderHP();
+
+    player2.changeHealth(mathRandom(70));
+    player2.renderHP();
+
+    console.log(player1.hp, player2.hp); // Just for checking
+
+    // Check For Btn Disabled
+    if (player1.hp === 0 || player2.hp === 0) {
+        randomButton.remove();
+        createReloadButton();
+    }
+
+    // Lose/Win/Draw Check
+    if (player1.hp <= 0 && player1.hp < player2.hp) {
+        arena.appendChild(resultText(player2.name));
+    } else if (player2.hp <= 0 && player2.hp < player1.hp) {
+        arena.appendChild(resultText(player1.name));
+    } else if (player1.hp === 0 && player2.hp === 0) {
+        arena.appendChild(resultText());
+    }
 })
+
 
 arena.appendChild(createPlayer(player1));
 arena.appendChild(createPlayer(player2));    
