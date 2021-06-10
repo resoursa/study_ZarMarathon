@@ -1,8 +1,14 @@
 const arena = document.querySelector('.arenas');
 const controls = document.querySelector('.control');
-const randomButton = document.querySelector('.button');
+// const randomButton = document.querySelector('.button');
+const formEl = document.querySelector('.control');
 
-
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 // Object Player 1
 const player1 = {
@@ -19,9 +25,9 @@ const player1 = {
     attack: function() {
         console.log(this.name + 'fight');
     },
-    changeHealth: changeHp,
-    elHp: elHp,
-    renderHP: renderHP,
+    changeHp,
+    elHp,
+    renderHP,
 }
 
 // Object Player 2
@@ -39,9 +45,9 @@ const player2 = {
     attack: function() {
         console.log(this.name + 'fight');
     },
-    changeHealth: changeHp,
-    elHp: elHp,
-    renderHP: renderHP,
+    changeHp,
+    elHp,
+    renderHP,
 }
 
 
@@ -142,19 +148,48 @@ function createReloadButton() {
     })
 }
 
+// Attack Function
+function enemyAttack() {
+    // Math random based on array quantity
+    const hit = ATTACK[mathRandom(ATTACK.length) - 1]
+    const defenece = ATTACK[mathRandom(ATTACK.length) - 1]
+    
+    return {
+        value: mathRandom(HIT[hit]),
+        hit: hit,
+        defence: defenece,
+    }
+}
 
-randomButton.addEventListener('click', function() {
-    player1.changeHealth(mathRandom(70));
+formEl.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const enemy = enemyAttack();
+    const attack = {};
+
+    for(let item of formEl) {
+        if(item.checked && item.name === 'hit') {
+            attack.value = mathRandom(HIT[item.value]);
+            attack.hit = item.value;
+        }
+
+        if(item.checked && item.name === 'defence') {
+            attack.defence = item.value;
+        }
+
+        item.checked = false;
+    }
+
+    console.log(attack, enemy);
+
+    player1.changeHp(enemy.value);
     player1.renderHP();
 
-    player2.changeHealth(mathRandom(70));
+    player2.changeHp(attack.value);
     player2.renderHP();
 
-    console.log(player1.hp, player2.hp); // Just for checking
-
-    // Check For Btn Disabled
     if (player1.hp === 0 || player2.hp === 0) {
-        randomButton.remove();
+        // randomButton.remove();
         createReloadButton();
     }
 
@@ -166,7 +201,25 @@ randomButton.addEventListener('click', function() {
     } else if (player1.hp === 0 && player2.hp === 0) {
         arena.appendChild(resultText());
     }
+
 })
+
+
+// randomButton.addEventListener('click', function() {
+//     player1.changeHp(mathRandom(20));
+//     player1.renderHP();
+//
+//     player2.changeHp(mathRandom(20));
+//     player2.renderHP();
+//
+//     console.log(player1.hp, player2.hp); // Just for checking
+//     console.log(enemy);
+//
+//     // Check For Btn Disabled
+//
+//
+//
+// })
 
 
 arena.appendChild(createPlayer(player1));
