@@ -182,11 +182,14 @@ formEl.addEventListener('submit', function(e) {
 
     console.log(attack, enemy);
 
-    player1.changeHp(enemy.value);
-    player1.renderHP();
-
-    player2.changeHp(attack.value);
-    player2.renderHP();
+    if(enemy.hit !== attack.defence){
+        player1.changeHp(enemy.value);
+        player1.renderHP();
+    }
+    if(attack.hit !== enemy.defence){
+        player2.changeHp(attack.value);
+        player2.renderHP();
+    }
 
     if (player1.hp === 0 || player2.hp === 0) {
         // randomButton.remove();
