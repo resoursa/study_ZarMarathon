@@ -1,12 +1,12 @@
 const arena = document.querySelector('.arenas');
 const controls = document.querySelector('.control');
-// const randomButton = document.querySelector('.button');
 const formEl = document.querySelector('.control');
+const submitBtn = document.querySelector('.button');
 
 const HIT = {
-    head: 30,
-    body: 25,
-    foot: 20,
+    head: 75,
+    body: 70,
+    foot: 65,
 }
 const ATTACK = ['head', 'body', 'foot'];
 
@@ -110,8 +110,7 @@ function changeHp(subtrahend) {
 
 // Return player specific selector with ID of object
 function elHp() {
-    const elIdSelector = document.querySelector('.player' + this.id + ' .life');
-    return elIdSelector;
+    return document.querySelector('.player' + this.id + ' .life');
 }
 
 // Call selector function with elHp and change with of life div
@@ -138,7 +137,7 @@ function createReloadButton() {
 
     reloadBtn.innerText = 'Restart';
 
-    controls.appendChild(wrapper);
+    arena.appendChild(wrapper);
     wrapper.appendChild(reloadBtn);
 
     const reloadButton = document.querySelector('.reloadBtn');
@@ -182,17 +181,17 @@ formEl.addEventListener('submit', function(e) {
 
     console.log(attack, enemy);
 
-    if(enemy.hit !== attack.defence){
+    if(enemy.hit !== attack.defence) {
         player1.changeHp(enemy.value);
         player1.renderHP();
     }
-    if(attack.hit !== enemy.defence){
+    if(attack.hit !== enemy.defence) {
         player2.changeHp(attack.value);
         player2.renderHP();
     }
 
     if (player1.hp === 0 || player2.hp === 0) {
-        // randomButton.remove();
+        formEl.remove();
         createReloadButton();
     }
 
@@ -206,23 +205,6 @@ formEl.addEventListener('submit', function(e) {
     }
 
 })
-
-
-// randomButton.addEventListener('click', function() {
-//     player1.changeHp(mathRandom(20));
-//     player1.renderHP();
-//
-//     player2.changeHp(mathRandom(20));
-//     player2.renderHP();
-//
-//     console.log(player1.hp, player2.hp); // Just for checking
-//     console.log(enemy);
-//
-//     // Check For Btn Disabled
-//
-//
-//
-// })
 
 
 arena.appendChild(createPlayer(player1));
