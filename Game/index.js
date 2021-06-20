@@ -1,11 +1,21 @@
-import {ATTACK, HIT, logs, player1, player2} from "../constants";
+import {ATTACK, HIT, logs} from "../constants";
 import {createDomEl, getRandom} from "../utils";
+import {Player} from "../Player";
+
+let player1;
+let player2;
 
 export class Game {
   constructor() {
     this.arena = document.querySelector('.arenas');
     this.formEl = document.querySelector('.control');
     this.chat = document.querySelector('.chat');
+  }
+
+
+  getPlayers = async () => {
+    const playerList = fetch('https://reactmarathon-api.herokuapp.com/api/mk/players').then(res => res.json());
+    return playerList;
   }
 
   // Player Lose Alert
@@ -60,7 +70,7 @@ export class Game {
     // Looking for checked radio
     for (let item of this.formEl) {
       if (item.checked && item.name === 'hit') {
-        attack.value = getRandom(HIT[item.value]);
+        // attack.value = getRandom(HIT[item.value]);
         attack.hit = item.value;
       }
 
@@ -72,6 +82,19 @@ export class Game {
     }
 
     return attack;
+  }
+
+
+  apiFetch = async () => {
+    const player = this.playerAttack();
+
+    const playerObjects = fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+      method: 'POST',
+      body: JSON.stringify({
+        hit: player.hit,
+        defence: player.defence,
+      })
+    });
   }
 
   // Logs Switch Case
@@ -174,15 +197,40 @@ export class Game {
     this.showResult();
   }
 
+  getRandomPlayer = async () => {
+    const randomPlayer = fetch('https://reactmarathon-api.herokuapp.com/api/mk/player/choose').then(res => res.json());
+    return randomPlayer;
+  }
 
-  gameStart = () => {
-    player1.createPlayer();
-    player2.createPlayer();
+  gameStart = async () => {
+    const players = await this.getPlayers();
+
+    const p1 = JSON.parse(localStorage.getItem('player1'));
+    const p2 = await this.getRandomPlayer();
+
+    this.apiFetch;
+
+
+    player1 = new Player({
+      ...p1,
+      id: 1,
+      rootSelector: 'arenas',
+    })
+    player2 = new Player({
+      ...p2,
+      id: 2,
+      rootSelector: 'arenas',
+    })
+
+
     this.generateLogs('start', player2, player1);
 
     this.formEl.addEventListener('submit', (event) => {
       event.preventDefault();
       this.onSubmit();
     });
+
+    player1.createPlayer();
+    player2.createPlayer();
   }
 }

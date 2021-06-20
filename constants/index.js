@@ -2,23 +2,6 @@
 // Object Player 1
 import {Player} from "../Player";
 
-export const player1 = new Player ({
-  id: 1,
-  name: 'Scorpion',
-  hp: 100,
-  img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-  rootSelector: 'arenas',
-})
-
-// Object Player 2
-export const player2 = new Player ({
-  id: 2,
-  name: 'Kitana',
-  hp: 100,
-  img: 'http://reactmarathon-api.herokuapp.com/assets/kitana.gif',
-  rootSelector: 'arenas',
-})
-
 export const HIT = {
   head: 75,
   body: 70,
