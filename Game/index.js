@@ -84,17 +84,21 @@ export class Game {
     return attack;
   }
 
+  const player123wqw = this.playerAttack();
+  const playerHitDef = fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+    method: 'POST',
+    body: JSON.stringify({
+      hit: player123wqw.hit,
+      defence: player123wqw.defence,
+    })
+  });
+
 
   apiFetch = async () => {
-    const player = this.playerAttack();
 
-    const playerObjects = fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
-      method: 'POST',
-      body: JSON.stringify({
-        hit: player.hit,
-        defence: player.defence,
-      })
-    });
+
+
+
   }
 
   // Logs Switch Case
@@ -208,9 +212,6 @@ export class Game {
     const p1 = JSON.parse(localStorage.getItem('player1'));
     const p2 = await this.getRandomPlayer();
 
-    this.apiFetch;
-
-
     player1 = new Player({
       ...p1,
       id: 1,
@@ -220,6 +221,11 @@ export class Game {
       ...p2,
       id: 2,
       rootSelector: 'arenas',
+    })
+
+    this.playerHitDef.then(response => {
+      console.log(response);
+      return response.json();
     })
 
 
